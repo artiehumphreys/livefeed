@@ -1,17 +1,10 @@
 package types
 
-type RawPlayerStats struct {
-	ID 	string `json:"id"`
-	Number string `json:"number"`
-	FirstName string `json:"firstName"`
-	LastName string `json:"lastName"`
-	Position string `json:"position"`
-
-	MP string `json:"minutesPlayed"`
+type RawTeamStats struct {
 	FGM string `json:"fieldGoalsMade"`
 	FGA string `json:"fieldGoalsAttempted"`
-	FTM string `json:"freeThrowsAttempted"`
-	FTA string `json:"freeThrowsMade"`
+	FTM string `json:"freeThrowsMade"`
+	FTA string `json:"freeThrowsAttempted"`
 	TPM string `json:"threePointsMade"`
 	TPA string `json:"threePointsAttempted"`
 
@@ -23,16 +16,13 @@ type RawPlayerStats struct {
 	STL string `json:"steals"`
 	BLK string `json:"blockedShots"`
 	PTS string `json:"points"`
+
+	FGpct string `json:"fieldGoalPercentage"`
+	TPpct string `json:"threePointPercentage"`
+	FTpct string `json:"freeThrowPercentage"`
 }
 
-type PlayerStats struct {
-	ID uint16
-	Number uint8
-	FirstName string
-	LastName string
-	Position string
-
-	MP float32
+type TeamStats struct {
 	FGM uint8
 	FGA uint8
 	FTM uint8
@@ -40,12 +30,16 @@ type PlayerStats struct {
 	TPM uint8
 	TPA uint8
 
-	OREB uint8
-	REB uint8
+	OREB uint16
+	REB uint16
 	AST uint8
 	TO uint8
 	PF uint8
 	STL uint8
 	BLK uint8
-	PTS uint8
+	PTS uint16
+
+	FGpct float32
+	TPpct float32
+	FTpct float32
 }
