@@ -10,8 +10,8 @@ type RawPlayerStats struct {
 	MP string `json:"minutesPlayed"`
 	FGM string `json:"fieldGoalsMade"`
 	FGA string `json:"fieldGoalsAttempted"`
-	FTM string `json:"freeThrowsAttempted"`
-	FTA string `json:"freeThrowsMade"`
+	FTM string `json:"freeThrowsMade"`
+	FTA string `json:"freeThrowsAttempted"`
 	TPM string `json:"threePointsMade"`
 	TPA string `json:"threePointsAttempted"`
 
