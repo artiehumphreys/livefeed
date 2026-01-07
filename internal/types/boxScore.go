@@ -18,8 +18,9 @@ type RawBoxScore struct {
 }
 
 type BoxScore struct {
-	ContestID int32
+	ContestID uint32
 	Status    string
+	Period    string
 	// possibly null minutes and seconds
 	Clock     *GameClock
 	TeamBoxes []Team

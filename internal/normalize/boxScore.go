@@ -2,6 +2,7 @@ package normalize
 
 import (
 	"encoding/json"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -18,8 +19,23 @@ func parseBoxScore(data []byte) (*types.RawBoxScore, error) {
 }
 
 func normalizeBoxScore(raw *types.RawBoxScore) (*types.BoxScore, error) {
+	contestStr := strings.TrimSpace(raw.ContestID)
+	contestID, err := strconv.ParseInt(contestStr, 10, 32)
+
+	if err != nil {
+		return nil, fmt.Errorf("invalid contest ID %q: %w", contestStr, err)
+	}
+
 	clock := parseClock(raw)
 
+	// TODO: parse team
+
+	return &types.BoxScore{
+		ContestID: uint32(contestID),
+		Status:    strings.TrimSpace(raw.Status),
+		Period:    strings.TrimSpace(raw.Period),
+		Clock:     clock,
+	}, nil
 }
 
 func parseClock(raw *types.RawBoxScore) *types.GameClock {
