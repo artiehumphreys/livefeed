@@ -16,3 +16,11 @@ type RawBoxScore struct {
 	Teams      []RawTeam    `json:"teams"`
 	TeamBoxes  []RawTeamBox `json:"teamBoxscore"`
 }
+
+type BoxScore struct {
+	ContestID int32
+	Status    string
+	// possibly null minutes and seconds
+	Clock     *GameClock
+	TeamBoxes []Team
+}
