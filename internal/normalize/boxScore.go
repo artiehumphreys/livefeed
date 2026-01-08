@@ -18,6 +18,18 @@ func parseBoxScore(data []byte) (*types.RawBoxScore, error) {
 	return &res, nil
 }
 
+func findTeamBox(
+	boxes []types.RawTeamBox,
+	teamID string,
+) (types.RawTeamBox, bool) {
+	for _, b := range boxes {
+		if b.TeamID == teamID {
+			return b, true
+		}
+	}
+	return types.RawTeamBox{}, false
+}
+
 func normalizeBoxScore(raw *types.RawBoxScore) (*types.BoxScore, error) {
 	contestStr := strings.TrimSpace(raw.ContestID)
 	contestID, err := strconv.ParseInt(contestStr, 10, 32)
@@ -26,7 +38,7 @@ func normalizeBoxScore(raw *types.RawBoxScore) (*types.BoxScore, error) {
 		return nil, fmt.Errorf("invalid contest ID %q: %w", contestStr, err)
 	}
 
-	clock := parseClock(raw)
+	clock := parseClock(raw.Minutes, raw.Seconds)
 
 	teams := make([]types.Team, 0, len(raw.Teams))
 	for _, rt := range raw.Teams {

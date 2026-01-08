@@ -7,9 +7,9 @@ import (
 	"github.com/artiehumphreys/livefeed/internal/types"
 )
 
-func parseClock(raw *types.RawBoxScore) *types.GameClock {
-	minStr := strings.TrimSpace(raw.Minutes)
-	secStr := strings.TrimSpace(raw.Seconds)
+func parseClock(mins string, secs string) *types.GameClock {
+	minStr := strings.TrimSpace(mins)
+	secStr := strings.TrimSpace(secs)
 
 	if minStr == "" && secStr == "" {
 		return nil

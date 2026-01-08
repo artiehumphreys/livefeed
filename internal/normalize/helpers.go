@@ -4,8 +4,6 @@ import (
 	"math"
 	"strconv"
 	"strings"
-
-	"github.com/artiehumphreys/livefeed/internal/types"
 )
 
 // parse with more bits than destination to avoid premature rejection
@@ -51,16 +49,4 @@ func stou16(s string) uint16 {
 
 func stof32(s string) float32 {
 	return float32(clampF64(0, math.MaxFloat32, stof(s, float32ParseBits)))
-}
-
-func findTeamBox(
-	boxes []types.RawTeamBox,
-	teamID string,
-) (types.RawTeamBox, bool) {
-	for _, b := range boxes {
-		if b.TeamID == teamID {
-			return b, true
-		}
-	}
-	return types.RawTeamBox{}, false
 }
