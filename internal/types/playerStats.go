@@ -32,7 +32,7 @@ type PlayerStats struct {
 	LastName  string
 	Position  string
 
-	MP  float32
+	MP  uint8
 	FGM uint8
 	FGA uint8
 	FTM uint8
@@ -40,12 +40,12 @@ type PlayerStats struct {
 	TPM uint8
 	TPA uint8
 
-	OREB uint8
-	REB  uint8
+	OREB uint16
+	REB  uint16
 	AST  uint8
 	TO   uint8
 	PF   uint8
 	STL  uint8
 	BLK  uint8
-	PTS  uint8
+	PTS  uint16
 }
