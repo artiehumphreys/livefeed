@@ -1,29 +1,24 @@
 package normalize
 
 import (
+	"strings"
+
 	"github.com/artiehumphreys/livefeed/internal/types"
 )
 
-func parseTeamStats(raw types.RawTeamStats) types.TeamStats {
-	return types.TeamStats{
-		FGM: stou8(raw.FGM),
-		FGA: stou8(raw.FGA),
-		FTM: stou8(raw.FTM),
-		FTA: stou8(raw.FTA),
-		TPM: stou8(raw.TPM),
-		TPA: stou8(raw.TPA),
+func parseTeam(rawBox types.RawTeamBox, rawTeam types.RawTeam) types.Team {
+	players := make([]types.PlayerStats, 0, len(rawBox.PlayerStats))
+	for _, rp := range rawBox.PlayerStats {
+		players = append(players, parsePlayerStats(rp))
+	}
 
-		OREB: stou16(raw.OREB),
-		REB:  stou16(raw.REB),
-		AST:  stou8(raw.AST),
-		TO:   stou8(raw.TO),
-		PF:   stou8(raw.PF),
-		STL:  stou8(raw.STL),
-		BLK:  stou8(raw.BLK),
-		PTS:  stou16(raw.PTS),
+	isHome := strings.EqualFold(strings.TrimSpace(rawTeam.IsHome), "true")
 
-		FGpct: stof32(raw.FGpct),
-		TPpct: stof32(raw.TPpct),
-		FTpct: stof32(raw.FTpct),
+	return types.Team{
+		TeamID:  stou16(rawTeam.TeamID),
+		Name:    strings.TrimSpace(rawTeam.Name),
+		IsHome:  isHome,
+		Players: players,
+		Stats:   parseTeamStats(rawBox.TeamStats),
 	}
 }

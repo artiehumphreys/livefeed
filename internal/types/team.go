@@ -3,7 +3,7 @@ package types
 type RawTeam struct {
 	TeamID string `json:"teamId"`
 	Name   string `json:"nameShort"`
-	IsHome *bool  `json:"isHome"`
+	IsHome string `json:"isHome"`
 }
 
 type Team struct {

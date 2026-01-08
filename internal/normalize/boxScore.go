@@ -28,12 +28,21 @@ func normalizeBoxScore(raw *types.RawBoxScore) (*types.BoxScore, error) {
 
 	clock := parseClock(raw)
 
-	// TODO: parse team
+	teams := make([]types.Team, 0, len(raw.Teams))
+	for _, rt := range raw.Teams {
+		rb, ok := findTeamBox(raw.TeamBoxes, rt.TeamID)
+		if !ok {
+			return nil, fmt.Errorf("missing team box for teamId=%s", rt.TeamID)
+		}
+
+		teams = append(teams, parseTeam(rb, rt))
+	}
 
 	return &types.BoxScore{
 		ContestID: uint32(contestID),
 		Status:    strings.TrimSpace(raw.Status),
 		Period:    strings.TrimSpace(raw.Period),
 		Clock:     clock,
+		TeamBoxes: teams,
 	}, nil
 }
