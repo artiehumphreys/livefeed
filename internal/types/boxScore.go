@@ -3,13 +3,13 @@ package types
 import "encoding/json"
 
 type RawTeamBox struct {
-	TeamID      string           `json:"teamId"`
+	TeamID      uint32           `json:"teamId"`
 	PlayerStats []RawPlayerStats `json:"playerStats"`
 	TeamStats   RawTeamStats     `json:"teamStats"`
 }
 
 type RawBoxScore struct {
-	ContestID  json.Number  `json:"contestId"`
+	ContestID  uint32       `json:"contestId"`
 	Status     string       `json:"status"`
 	Period     string       `json:"period"`
 	Minutes    *json.Number `json:"minutes"`

@@ -8,13 +8,13 @@ import (
 
 func parsePlayerStats(raw types.RawPlayerStats) types.PlayerStats {
 	return types.PlayerStats{
-		ID:        stou16(raw.ID),
-		Number:    stou8(raw.Number),
+		ID:        raw.ID,
+		Number:    raw.Number,
 		FirstName: strings.TrimSpace(raw.FirstName),
 		LastName:  strings.TrimSpace(raw.LastName),
 		Position:  strings.TrimSpace(raw.Position),
 
-		MP:  stou8(raw.MP),
+		MP:  stof32(raw.MP),
 		FGM: stou8(raw.FGM),
 		FGA: stou8(raw.FGA),
 		FTM: stou8(raw.FTM),

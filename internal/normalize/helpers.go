@@ -10,6 +10,7 @@ import (
 const (
 	uint8ParseBits   = 16
 	uint16ParseBits  = 32
+	uint32ParseBits  = 64
 	float32ParseBits = 64
 )
 
@@ -51,6 +52,19 @@ func stou16(s string) uint16 {
 	return uint16(clampU64(0, math.MaxUint16, stoui(s, uint16ParseBits)))
 }
 
+func stou32(s string) uint32 {
+	return uint32(clampU64(0, math.MaxUint32, stoui(s, uint32ParseBits)))
+}
+
 func stof32(s string) float32 {
 	return float32(clampF64(0, math.MaxFloat32, stof(s, float32ParseBits)))
+}
+
+func stofPct(s string) float32 {
+	s = strings.TrimSpace(strings.TrimSuffix(s, "%"))
+	f, err := strconv.ParseFloat(s, float32ParseBits)
+	if err != nil {
+		return 0
+	}
+	return float32(f)
 }

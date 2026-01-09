@@ -6,7 +6,7 @@ import (
 	"github.com/artiehumphreys/livefeed/internal/normalize"
 )
 
-const defaultGameID = "6502585"
+const defaultGameID = 6502515
 
 func Run() {
 	client := NewClient()

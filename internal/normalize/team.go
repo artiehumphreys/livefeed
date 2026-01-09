@@ -12,12 +12,10 @@ func parseTeam(rawBox types.RawTeamBox, rawTeam types.RawTeam) types.Team {
 		players = append(players, parsePlayerStats(rp))
 	}
 
-	isHome := strings.EqualFold(strings.TrimSpace(rawTeam.IsHome), "true")
-
 	return types.Team{
 		TeamID:  stou16(rawTeam.TeamID),
 		Name:    strings.TrimSpace(rawTeam.Name),
-		IsHome:  isHome,
+		IsHome:  rawTeam.IsHome,
 		Players: players,
 		Stats:   parseTeamStats(rawBox.TeamStats),
 	}

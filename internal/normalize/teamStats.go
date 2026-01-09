@@ -22,8 +22,8 @@ func parseTeamStats(raw types.RawTeamStats) types.TeamStats {
 		BLK:  stou8(raw.BLK),
 		PTS:  stou16(raw.PTS),
 
-		FGpct: stof32(raw.FGpct),
-		TPpct: stof32(raw.TPpct),
-		FTpct: stof32(raw.FTpct),
+		FGpct: stofPct(raw.FGpct),
+		TPpct: stofPct(raw.TPpct),
+		FTpct: stofPct(raw.FTpct),
 	}
 }

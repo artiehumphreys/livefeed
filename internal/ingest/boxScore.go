@@ -3,6 +3,7 @@ package ingest
 import (
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 )
 
@@ -21,11 +22,12 @@ func NewClient() *Client {
 }
 
 // https://go.dev/blog/error-handling-and-go
-func (c *Client) FetchBoxScore(gameId string) ([]byte, error) {
-	url := fmt.Sprintf("%s/game/%s/boxscore", c.BaseURL, gameId)
+func (c *Client) FetchBoxScore(gameId uint32) ([]byte, error) {
+	url := fmt.Sprintf("%s/game/%d/boxscore", c.BaseURL, gameId)
 
 	resp, err := http.Get(url)
 	if err != nil {
+		log.Fatal(err)
 		return nil, fmt.Errorf("Unable to Fetch Data: GET request error")
 	}
 	defer resp.Body.Close()

@@ -1,8 +1,8 @@
 package types
 
 type RawPlayerStats struct {
-	ID        string `json:"id"`
-	Number    string `json:"number"`
+	ID        uint16 `json:"id"`
+	Number    uint8  `json:"number"`
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
 	Position  string `json:"position"`
@@ -32,7 +32,7 @@ type PlayerStats struct {
 	LastName  string
 	Position  string
 
-	MP  uint8
+	MP  float32
 	FGM uint8
 	FGA uint8
 	FTM uint8
