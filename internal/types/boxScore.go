@@ -1,5 +1,7 @@
 package types
 
+import "encoding/json"
+
 type RawTeamBox struct {
 	TeamID      string           `json:"teamId"`
 	PlayerStats []RawPlayerStats `json:"playerStats"`
@@ -7,11 +9,11 @@ type RawTeamBox struct {
 }
 
 type RawBoxScore struct {
-	ContestID  string       `json:"contestId"`
+	ContestID  json.Number  `json:"contestId"`
 	Status     string       `json:"status"`
 	Period     string       `json:"period"`
-	Minutes    string       `json:"minutes"`
-	Seconds    string       `json:"seconds"`
+	Minutes    *json.Number `json:"minutes"`
+	Seconds    *json.Number `json:"seconds"`
 	SportsCode string       `json:"sportsCode"`
 	Teams      []RawTeam    `json:"teams"`
 	TeamBoxes  []RawTeamBox `json:"teamBoxscore"`

@@ -1,36 +1,32 @@
 package normalize
 
 import (
-	"strconv"
-	"strings"
+	"math"
 
 	"github.com/artiehumphreys/livefeed/internal/types"
 )
 
-func parseClock(mins string, secs string) *types.GameClock {
-	minStr := strings.TrimSpace(mins)
-	secStr := strings.TrimSpace(secs)
-
-	if minStr == "" && secStr == "" {
+func parseClock(raw *types.RawBoxScore) *types.GameClock {
+	if raw.Seconds == nil && raw.Minutes == nil {
 		return nil
 	}
 
-	// minutes and seconds should fit into an 8bit integer,
-	// default to 0 on error
-	minutes, err := strconv.ParseUint(minStr, 10, 8)
+	var minutes, seconds uint8
 
-	if err != nil {
-		minutes = 0
+	if raw.Minutes != nil {
+		if m, err := raw.Minutes.Int64(); err == nil {
+			minutes = uint8(clampI64(0, math.MaxUint8, m))
+		}
 	}
 
-	seconds, err := strconv.ParseUint(secStr, 10, 8)
-
-	if err != nil || seconds > 59 {
-		seconds = 0
+	if raw.Seconds != nil {
+		if s, err := raw.Seconds.Int64(); err == nil {
+			seconds = uint8(clampI64(0, math.MaxUint8, s))
+		}
 	}
 
 	return &types.GameClock{
-		Minutes: uint8(minutes),
-		Seconds: uint8(seconds),
+		Minutes: minutes,
+		Seconds: seconds,
 	}
 }

@@ -13,7 +13,7 @@ type Client struct {
 }
 
 // lol no oop
-func newClient() *Client {
+func NewClient() *Client {
 	return &Client{
 		BaseURL:    "https://ncaa-api.henrygd.me",
 		HTTPClient: http.DefaultClient,
@@ -21,7 +21,7 @@ func newClient() *Client {
 }
 
 // https://go.dev/blog/error-handling-and-go
-func (c *Client) fetchBoxScore(gameId string) ([]byte, error) {
+func (c *Client) FetchBoxScore(gameId string) ([]byte, error) {
 	url := fmt.Sprintf("%s/game/%s/boxscore", c.BaseURL, gameId)
 
 	resp, err := http.Get(url)

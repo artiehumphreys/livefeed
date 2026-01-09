@@ -17,6 +17,10 @@ func clampU64(lo, hi, val uint64) uint64 {
 	return min(max(lo, val), hi)
 }
 
+func clampI64(lo, hi, val int64) int64 {
+	return min(max(lo, val), hi)
+}
+
 func clampF64(lo, hi, val float64) float64 {
 	return min(max(lo, val), hi)
 }

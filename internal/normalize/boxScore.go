@@ -3,13 +3,12 @@ package normalize
 import (
 	"encoding/json"
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/artiehumphreys/livefeed/internal/types"
 )
 
-func parseBoxScore(data []byte) (*types.RawBoxScore, error) {
+func ParseBoxScore(data []byte) (*types.RawBoxScore, error) {
 	var res types.RawBoxScore
 	// short initialization to reduce scope of error, neat pattern
 	if err := json.Unmarshal(data, &res); err != nil {
@@ -30,15 +29,13 @@ func findTeamBox(
 	return types.RawTeamBox{}, false
 }
 
-func normalizeBoxScore(raw *types.RawBoxScore) (*types.BoxScore, error) {
-	contestStr := strings.TrimSpace(raw.ContestID)
-	contestID, err := strconv.ParseInt(contestStr, 10, 32)
-
+func NormalizeBoxScore(raw *types.RawBoxScore) (*types.BoxScore, error) {
+	contestID, err := raw.ContestID.Int64()
 	if err != nil {
-		return nil, fmt.Errorf("invalid contest ID %q: %w", contestStr, err)
+		return nil, fmt.Errorf("invalid contestId %q: %w", raw.ContestID, err)
 	}
 
-	clock := parseClock(raw.Minutes, raw.Seconds)
+	clock := parseClock(raw)
 
 	teams := make([]types.Team, 0, len(raw.Teams))
 	for _, rt := range raw.Teams {
