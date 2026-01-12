@@ -1,3 +1,3 @@
 # livefeed
 
-A real-time, personalized stat-tracker for NCAA basketball competitions.
+Real-time in-game analytics for NCAA men's basketball games.
