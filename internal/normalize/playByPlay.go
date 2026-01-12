@@ -6,6 +6,15 @@ import (
 	"github.com/artiehumphreys/livefeed/internal/types"
 )
 
-func NormalizePlayByPlay(data []byte) ([]types.Play, error) {
+func ParsePlayByPlay(data []byte) (*types.RawPlayByPlaySummary, error) {
+	var res types.RawPlayByPlaySummary
+
+	if err := json.Unmarshal(data, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func NormalizePlayByPlay(raw *types.RawPlayByPlaySummary) (types.PlayByPlaySummary, error) {
 
 }

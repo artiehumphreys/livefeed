@@ -15,6 +15,7 @@ type RawPlay struct {
 
 type Play struct {
 	TeamID           uint16
+	Period           uint8
 	IsHome           bool
 	HomeScore        uint16
 	AwayScore        uint16
