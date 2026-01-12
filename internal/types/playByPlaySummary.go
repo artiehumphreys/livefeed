@@ -7,7 +7,7 @@ type RawPlayByPlaySummary struct {
 }
 
 type PlayByPlaySummary struct {
-	Periods []Period
+	Plays []Play
 	// storing indices of plays
 	HomePlays []uint16
 	AwayPlays []uint16
