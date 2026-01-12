@@ -3,13 +3,11 @@ package ingest
 import (
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 )
 
-// https://go.dev/blog/error-handling-and-go
-func (c *Client) FetchBoxScore(gameId uint32) ([]byte, error) {
-	url := fmt.Sprintf("%s/game/%d/boxscore", c.BaseURL, gameId)
+func (c *Client) FetchPlayByPlay(gameId uint32) ([]byte, error) {
+	url := fmt.Sprintf("%s/game/%d/play-by-play", c.BaseURL, gameId)
 
 	resp, err := http.Get(url)
 	if err != nil {
