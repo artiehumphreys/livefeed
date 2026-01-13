@@ -30,7 +30,7 @@ func findTeamBox(
 }
 
 func NormalizeBoxScore(raw *types.RawBoxScore) (*types.BoxScore, error) {
-	clock := parseClock(raw)
+	clock := parseClockFromBoxScore(raw)
 
 	teams := make([]types.Team, 0, len(raw.Teams))
 	for _, rt := range raw.Teams {

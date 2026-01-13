@@ -27,4 +27,21 @@ func Run() {
 	}
 
 	log.Printf("%+v\n", bs)
+
+	pbpData, err := client.FetchPlayByPlay(defaultGameID)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pbpRaw, err := normalize.ParsePlayByPlay(pbpData)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pbp, err := normalize.NormalizePlayByPlay(pbpRaw)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf("%v+\n", pbp)
 }
