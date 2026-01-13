@@ -24,5 +24,4 @@ type Play struct {
 	FirstName        string
 	LastName         string
 	EventDescription string
-	IsScoringPlay    bool
 }
