@@ -29,4 +29,52 @@ func (ra *RunAnalyzer) ProcessPlay(play types.Play) {
 
 	deltaHome := play.HomeScore - ra.LastPlay.HomeScore
 	deltaVisitor := play.VisitorScore - ra.LastPlay.VisitorScore
+
+	if deltaHome == 0 && deltaVisitor == 0 {
+		ra.LastPlay = &play
+		return
+	}
+
+	// malformed data
+	if deltaHome > 0 && deltaVisitor > 0 {
+		ra.LastPlay = &play
+		return
+	}
+
+	// BIG assumption: teamID corresponds to scoring team
+	scoringTeam := play.TeamID
+	if scoringTeam == 0 {
+		ra.LastPlay = &play
+		return
+	}
+
+	var pointsScored = max(deltaHome, deltaVisitor)
+
+	if ra.ActiveRun == nil {
+		ra.ActiveRun = &types.ActiveScoringRun{
+			TeamID:        scoringTeam,
+			StartIndex:    play.Index,
+			PointsFor:     pointsScored,
+			PointsAgainst: 0,
+		}
+		ra.LastPlay = &play
+		return
+	}
+
+	if scoringTeam == ra.ActiveRun.TeamID {
+		ra.ActiveRun.PointsFor += pointsScored
+		ra.LastPlay = &play
+		return
+	}
+
+	// other team scored
+	ra.ActiveRun.PointsAgainst += pointsScored
+
+	if ra.ActiveRun.PointsAgainst <= 2 {
+		ra.LastPlay = &play
+		return
+	}
+
+	ra.finalizeRun(play.Index - 1)
+	ra.LastPlay = &play
 }
