@@ -27,7 +27,7 @@ func NormalizePlays(raw []types.RawPlay, period uint8) ([]types.Play, error) {
 			Period:           period,
 			IsHome:           p.IsHome,
 			HomeScore:        p.HomeScore,
-			AwayScore:        p.AwayScore,
+			VisitorScore:     p.VisitorScore,
 			Clock:            clock,
 			FirstName:        strings.TrimSpace(p.FirstName),
 			LastName:         strings.TrimSpace(p.LastName),

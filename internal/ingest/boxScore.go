@@ -3,7 +3,6 @@ package ingest
 import (
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 )
 
