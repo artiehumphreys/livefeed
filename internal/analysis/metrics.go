@@ -27,19 +27,24 @@ func PointsPerPossession(team types.TeamStats) float32 {
 }
 
 func ComputeTeamMetrics(team, opp types.TeamStats) TeamMetrics {
-	oppDREB := float32(opp.REB - opp.OREB)
+	// Offensive Rebound %
+	oppDREB := float32(opp.REB) - float32(opp.OREB)
 
 	var orebPct float32
-	if team.OREB+uint16(oppDREB) > 0 {
+	if team.OREB > 0 || oppDREB > 0 {
 		orebPct = float32(team.OREB) / (float32(team.OREB) + oppDREB)
 	}
 
+	// Defensive Rebound %
+	teamDREB := float32(team.REB) - float32(team.OREB)
+	oppOREB := float32(opp.OREB)
+
 	var drebPct float32
-	if team.REB-team.OREB+opp.OREB > 0 {
-		drebPct = float32(team.REB-team.OREB) /
-			(float32(team.REB-team.OREB) + float32(opp.OREB))
+	if teamDREB+oppOREB > 0 {
+		drebPct = teamDREB / (teamDREB + oppOREB)
 	}
 
+	// 3PA rate
 	var threeAttemptRate float32
 	if team.FGA > 0 {
 		threeAttemptRate = float32(team.TPA) / float32(team.FGA)
