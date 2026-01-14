@@ -1,0 +1,19 @@
+package api
+
+import (
+	"github.com/artiehumphreys/livefeed/internal/analysis"
+	"github.com/artiehumphreys/livefeed/internal/types"
+)
+
+type GameSnapshot struct {
+	Teams       []TeamSnapshot
+	BoxScore    *types.BoxScore
+	PlayByPlay  *types.PlayByPlaySummary
+	LastUpdated int64
+}
+
+type TeamSnapshot struct {
+	TeamID  uint16
+	Name    string
+	Metrics analysis.TeamMetrics
+}
