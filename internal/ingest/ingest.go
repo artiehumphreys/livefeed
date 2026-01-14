@@ -4,14 +4,11 @@ import (
 	"log"
 
 	"github.com/artiehumphreys/livefeed/internal/normalize"
+	"github.com/artiehumphreys/livefeed/internal/types"
 )
 
-const defaultGameID = 6502515
-
-func Run() {
-	client := NewClient()
-
-	data, err := client.FetchBoxScore(defaultGameID)
+func (c *Client) GetBoxScore(gameID uint32) *types.BoxScore {
+	data, err := c.FetchBoxScore(gameID)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -26,22 +23,24 @@ func Run() {
 		log.Fatal(err)
 	}
 
-	log.Printf("%+v\n", bs)
+	return bs
+}
 
-	pbpData, err := client.FetchPlayByPlay(defaultGameID)
+func (c *Client) GetPlayByPlay(gameID uint32) *types.PlayByPlaySummary {
+	data, err := c.FetchPlayByPlay(gameID)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	pbpRaw, err := normalize.ParsePlayByPlay(pbpData)
+	raw, err := normalize.ParsePlayByPlay(data)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	pbp, err := normalize.NormalizePlayByPlay(pbpRaw)
+	pbp, err := normalize.NormalizePlayByPlay(raw)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	log.Printf("%v+\n", pbp)
+	return pbp
 }

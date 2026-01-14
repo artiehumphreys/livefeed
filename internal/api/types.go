@@ -6,6 +6,7 @@ import (
 )
 
 type GameSnapshot struct {
+	ContestID   uint32
 	Teams       []TeamSnapshot
 	BoxScore    *types.BoxScore
 	PlayByPlay  *types.PlayByPlaySummary
