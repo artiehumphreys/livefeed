@@ -14,6 +14,7 @@ type RawPlay struct {
 }
 
 type Play struct {
+	Index            uint16
 	TeamID           uint16
 	Period           uint8
 	IsHome           bool
@@ -23,5 +24,4 @@ type Play struct {
 	FirstName        string
 	LastName         string
 	EventDescription string
-	IsScoringPlay    bool
 }

@@ -23,6 +23,7 @@ func NormalizePlays(raw []types.RawPlay, period uint8) ([]types.Play, error) {
 		}
 
 		res = append(res, types.Play{
+			Index:            uint16(len(res)),
 			TeamID:           uint16(clampI64(0, math.MaxUint16, teamID)),
 			Period:           period,
 			IsHome:           p.IsHome,
