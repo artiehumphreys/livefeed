@@ -3,7 +3,8 @@ package analysis
 import "github.com/artiehumphreys/livefeed/internal/types"
 
 type TeamMetrics struct {
-	PPP float32
+	TeamID uint16
+	PPP    float32
 
 	OffensiveReboundPct float32
 	DefensiveReboundPct float32
@@ -26,7 +27,7 @@ func PointsPerPossession(team types.TeamStats) float32 {
 	return float32(team.PTS) / possessions
 }
 
-func ComputeTeamMetrics(team, opp types.TeamStats) TeamMetrics {
+func ComputeTeamMetrics(teamID uint16, team, opp types.TeamStats) TeamMetrics {
 	// Offensive Rebound %
 	oppDREB := float32(opp.REB) - float32(opp.OREB)
 
@@ -51,6 +52,7 @@ func ComputeTeamMetrics(team, opp types.TeamStats) TeamMetrics {
 	}
 
 	return TeamMetrics{
+		TeamID:                teamID,
 		PPP:                   PointsPerPossession(team),
 		OffensiveReboundPct:   orebPct,
 		DefensiveReboundPct:   drebPct,

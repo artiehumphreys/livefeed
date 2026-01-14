@@ -21,9 +21,9 @@ func (ra *RunAnalyzer) finalizeRun(end uint16) {
 	ra.ActiveRun = nil
 }
 
-func (ra *RunAnalyzer) ProcessPlay(play types.Play) {
+func (ra *RunAnalyzer) ProcessPlay(play *types.Play) {
 	if ra.LastPlay == nil {
-		ra.LastPlay = &play
+		ra.LastPlay = play
 		return
 	}
 
@@ -31,20 +31,20 @@ func (ra *RunAnalyzer) ProcessPlay(play types.Play) {
 	deltaVisitor := play.VisitorScore - ra.LastPlay.VisitorScore
 
 	if deltaHome == 0 && deltaVisitor == 0 {
-		ra.LastPlay = &play
+		ra.LastPlay = play
 		return
 	}
 
 	// malformed data
 	if deltaHome > 0 && deltaVisitor > 0 {
-		ra.LastPlay = &play
+		ra.LastPlay = play
 		return
 	}
 
 	// BIG assumption: teamID corresponds to scoring team
 	scoringTeam := play.TeamID
 	if scoringTeam == 0 {
-		ra.LastPlay = &play
+		ra.LastPlay = play
 		return
 	}
 
@@ -57,13 +57,13 @@ func (ra *RunAnalyzer) ProcessPlay(play types.Play) {
 			PointsFor:     pointsScored,
 			PointsAgainst: 0,
 		}
-		ra.LastPlay = &play
+		ra.LastPlay = play
 		return
 	}
 
 	if scoringTeam == ra.ActiveRun.TeamID {
 		ra.ActiveRun.PointsFor += pointsScored
-		ra.LastPlay = &play
+		ra.LastPlay = play
 		return
 	}
 
@@ -71,10 +71,26 @@ func (ra *RunAnalyzer) ProcessPlay(play types.Play) {
 	ra.ActiveRun.PointsAgainst += pointsScored
 
 	if ra.ActiveRun.PointsAgainst <= 2 {
-		ra.LastPlay = &play
+		ra.LastPlay = play
 		return
 	}
 
 	ra.finalizeRun(play.Index - 1)
-	ra.LastPlay = &play
+	ra.LastPlay = play
+}
+
+func ComputeRuns(pbp *types.PlayByPlaySummary) []types.ScoringRun {
+	ra := &RunAnalyzer{}
+
+	for i := range pbp.Plays {
+		play := &pbp.Plays[i]
+		play.Index = uint16(i)
+		ra.ProcessPlay(play)
+	}
+
+	if ra.ActiveRun != nil {
+		ra.finalizeRun(uint16(len(pbp.Plays) - 1))
+	}
+
+	return ra.Runs
 }

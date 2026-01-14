@@ -10,6 +10,7 @@ type GameSnapshot struct {
 	Teams       []TeamSnapshot
 	BoxScore    *types.BoxScore
 	PlayByPlay  *types.PlayByPlaySummary
+	Runs        []types.ScoringRun
 	LastUpdated int64
 }
 

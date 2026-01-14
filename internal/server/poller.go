@@ -43,13 +43,15 @@ func (p *Poller) PollOnce() {
 		teams = append(teams, api.TeamSnapshot{
 			TeamID:  teamA.TeamID,
 			Name:    teamA.Name,
-			Metrics: analysis.ComputeTeamMetrics(teamA.Stats, teamB.Stats),
+			Metrics: analysis.ComputeTeamMetrics(teamA.TeamID, teamA.Stats, teamB.Stats),
 		}, api.TeamSnapshot{
 			TeamID:  teamB.TeamID,
 			Name:    teamB.Name,
-			Metrics: analysis.ComputeTeamMetrics(teamB.Stats, teamA.Stats),
+			Metrics: analysis.ComputeTeamMetrics(teamB.TeamID, teamB.Stats, teamA.Stats),
 		})
 	}
+
+	runs := analysis.ComputeRuns(pbp)
 
 	// atomic snapshots
 	p.mtx.Lock()
@@ -58,6 +60,7 @@ func (p *Poller) PollOnce() {
 		Teams:       teams,
 		BoxScore:    box,
 		PlayByPlay:  pbp,
+		Runs:        runs,
 		LastUpdated: time.Now().Unix(),
 	}
 	p.mtx.Unlock()
