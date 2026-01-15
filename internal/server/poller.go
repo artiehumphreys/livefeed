@@ -23,6 +23,24 @@ func NewPoller(gameID uint32) *Poller {
 	}
 }
 
+func (p *Poller) Start(interval time.Duration) {
+	ticker := time.NewTicker(interval)
+
+	// run a new goroutine to fetch information every `interval` seconds
+	go func() {
+		for range ticker.C {
+			p.PollOnce()
+		}
+	}()
+}
+
+func (p *Poller) GetSnapshot() *api.GameSnapshot {
+	// ensure no race conditions with data
+	p.mtx.RLock()
+	defer p.mtx.RUnlock()
+	return p.snapshot
+}
+
 func (p *Poller) PollOnce() {
 	box, err := p.client.GetBoxScore(p.gameID)
 	if err != nil {
