@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"sync"
 	"time"
 
@@ -42,16 +43,21 @@ func (p *Poller) GetSnapshot() *api.GameSnapshot {
 }
 
 func (p *Poller) PollOnce() {
+	fmt.Println("Polling game", p.gameID)
+
 	box, err := p.client.GetBoxScore(p.gameID)
 	if err != nil {
+		fmt.Println("Error fetching box score:", err)
 		return
 	}
 
 	pbp, err := p.client.GetPlayByPlay(p.gameID)
 	if err != nil {
+		fmt.Println("Error fetching play-by-play:", err)
 		return
 	}
 
+	fmt.Println("Data fetched successfully!")
 	teams := make([]api.TeamSnapshot, 0, len(box.TeamBoxes))
 
 	if len(box.TeamBoxes) == 2 {
@@ -73,6 +79,8 @@ func (p *Poller) PollOnce() {
 
 	// atomic snapshots
 	p.mtx.Lock()
+	defer p.mtx.Unlock()
+
 	p.snapshot = &api.GameSnapshot{
 		ContestID:   p.gameID,
 		Teams:       teams,
@@ -81,5 +89,6 @@ func (p *Poller) PollOnce() {
 		Runs:        runs,
 		LastUpdated: time.Now().Unix(),
 	}
-	p.mtx.Unlock()
+
+	fmt.Println("Snapshot updated!")
 }
