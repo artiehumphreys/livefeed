@@ -68,9 +68,8 @@ func (ra *RunAnalyzer) ProcessPlay(play *types.Play) {
 	}
 
 	// other team scored
-	ra.ActiveRun.PointsAgainst += pointsScored
-
-	if ra.ActiveRun.PointsAgainst <= 2 {
+	if ra.ActiveRun.PointsAgainst+pointsScored <= 2 {
+		ra.ActiveRun.PointsAgainst += pointsScored
 		ra.LastPlay = play
 		return
 	}
