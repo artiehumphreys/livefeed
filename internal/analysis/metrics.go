@@ -12,6 +12,8 @@ type TeamMetrics struct {
 	DefensiveReboundPct float32
 
 	ThreePointAttemptRate float32
+	FreeThrowRate         float32
+	EffectiveFGPct        float32
 }
 
 const Y float32 = 0.44
@@ -73,6 +75,20 @@ func ThreePointAttemptRate(team types.TeamStats) float32 {
 	return float32(team.TPA) / float32(team.FGA)
 }
 
+func FreeThrowRate(team types.TeamStats) float32 {
+	if team.FGA == 0 {
+		return 0
+	}
+	return float32(team.FTA) / float32(team.FGA)
+}
+
+func EffectiveFieldGoalPercentage(team types.TeamStats) float32 {
+	if team.FGA == 0 {
+		return 0
+	}
+	return float32(team.FGM) + (float32(team.TPM)*0.5)/float32(team.FGA)
+}
+
 func ComputeTeamMetrics(teamID uint16, team, opp types.TeamStats) TeamMetrics {
 	return TeamMetrics{
 		TeamID:                teamID,
@@ -81,5 +97,7 @@ func ComputeTeamMetrics(teamID uint16, team, opp types.TeamStats) TeamMetrics {
 		OffensiveReboundPct:   OffensiveReboundPercentage(team, opp),
 		DefensiveReboundPct:   DefensiveReboundPercentage(team, opp),
 		ThreePointAttemptRate: ThreePointAttemptRate(team),
+		FreeThrowRate:         FreeThrowRate(team),
+		EffectiveFGPct:        EffectiveFieldGoalPercentage(team),
 	}
 }
