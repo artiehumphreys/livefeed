@@ -4,44 +4,49 @@ import (
 	"log"
 
 	"github.com/artiehumphreys/livefeed/internal/normalize"
+	"github.com/artiehumphreys/livefeed/internal/types"
 )
 
-const defaultGameID = 6502515
-
-func Run() {
-	client := NewClient()
-
-	data, err := client.FetchBoxScore(defaultGameID)
+func (c *Client) GetBoxScore(gameID uint32) (*types.BoxScore, error) {
+	data, err := c.FetchBoxScore(gameID)
 	if err != nil {
 		log.Fatal(err)
+		return nil, err
 	}
 
 	raw, err := normalize.ParseBoxScore(data)
 	if err != nil {
 		log.Fatal(err)
+		return nil, err
 	}
 
 	bs, err := normalize.NormalizeBoxScore(raw)
 	if err != nil {
 		log.Fatal(err)
+		return nil, err
 	}
 
-	log.Printf("%+v\n", bs)
+	return bs, nil
+}
 
-	pbpData, err := client.FetchPlayByPlay(defaultGameID)
+func (c *Client) GetPlayByPlay(gameID uint32) (*types.PlayByPlaySummary, error) {
+	data, err := c.FetchPlayByPlay(gameID)
 	if err != nil {
 		log.Fatal(err)
+		return nil, err
 	}
 
-	pbpRaw, err := normalize.ParsePlayByPlay(pbpData)
+	raw, err := normalize.ParsePlayByPlay(data)
 	if err != nil {
 		log.Fatal(err)
+		return nil, err
 	}
 
-	pbp, err := normalize.NormalizePlayByPlay(pbpRaw)
+	pbp, err := normalize.NormalizePlayByPlay(raw)
 	if err != nil {
 		log.Fatal(err)
+		return nil, err
 	}
 
-	log.Printf("%v+\n", pbp)
+	return pbp, nil
 }
