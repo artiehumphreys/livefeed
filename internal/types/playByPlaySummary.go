@@ -11,5 +11,4 @@ type PlayByPlaySummary struct {
 	// storing indices of plays
 	HomePlays []uint16
 	AwayPlays []uint16
-	Runs      []ScoringRun
 }
