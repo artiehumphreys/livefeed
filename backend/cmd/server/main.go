@@ -13,6 +13,7 @@ func main() {
 	http.HandleFunc("/set-game", srv.SetGameHandler)
 	http.HandleFunc("/snapshot", srv.SnapshotHandler)
 	http.HandleFunc("/validate-game", srv.ValidateGameHandler)
+	http.HandleFunc("/scoreboard", srv.ScoreboardHandler)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

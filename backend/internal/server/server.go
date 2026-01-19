@@ -11,14 +11,19 @@ import (
 )
 
 type Server struct {
-	mtx    sync.Mutex
-	poller *Poller
-	client *ingest.Client
+	mtx              sync.Mutex
+	gamePoller       *Poller
+	scoreboardPoller *ScoreboardPoller
+	client           *ingest.Client
 }
 
 func NewServer() *Server {
+	sb := NewScoreboardPoller()
+	sb.Start(1 * time.Minute)
+
 	return &Server{
-		client: ingest.NewClient(),
+		client:           ingest.NewClient(),
+		scoreboardPoller: sb,
 	}
 }
 
@@ -38,10 +43,10 @@ func (s *Server) SetGameHandler(w http.ResponseWriter, r *http.Request) {
 	s.mtx.Lock()
 	defer s.mtx.Unlock()
 
-	// replace active poller
+	// replace active gamePoller
 	p := NewPoller(uint32(gameID64))
 	p.Start(5 * time.Second)
-	s.poller = p
+	s.gamePoller = p
 
 	w.WriteHeader(http.StatusOK)
 }
@@ -49,7 +54,7 @@ func (s *Server) SetGameHandler(w http.ResponseWriter, r *http.Request) {
 func (s *Server) SnapshotHandler(w http.ResponseWriter, r *http.Request) {
 	// frontend polling
 	s.mtx.Lock()
-	p := s.poller
+	p := s.gamePoller
 	s.mtx.Unlock()
 
 	if p == nil {
@@ -93,4 +98,15 @@ func (s *Server) ValidateGameHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(resp)
+}
+
+func (s *Server) ScoreboardHandler(w http.ResponseWriter, r *http.Request) {
+	snapshot := s.scoreboardPoller.GetSnapshot()
+	if snapshot == nil {
+		http.Error(w, "scoreboard not ready", http.StatusServiceUnavailable)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(snapshot)
 }

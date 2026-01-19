@@ -7,7 +7,6 @@ import (
 
 	"github.com/artiehumphreys/livefeed/internal/api"
 	"github.com/artiehumphreys/livefeed/internal/ingest"
-	"github.com/artiehumphreys/livefeed/internal/normalize"
 )
 
 type ScoreboardPoller struct {
@@ -38,13 +37,11 @@ func (s *ScoreboardPoller) Start(interval time.Duration) {
 func (s *ScoreboardPoller) PollOnce() {
 	fmt.Println("Polling scoreboard")
 
-	raw, err := s.client.GetScoreboard()
+	games, err := s.client.GetScoreboard()
 	if err != nil {
 		fmt.Println("Error fetching scoreboard:", err)
 		return
 	}
-
-	games := normalize.NormalizeScoreboard(raw.Games)
 
 	s.mtx.Lock()
 	s.snapshot = &api.ScoreboardSnapshot{
@@ -54,4 +51,10 @@ func (s *ScoreboardPoller) PollOnce() {
 	s.mtx.Unlock()
 
 	fmt.Println("Scoreboard updated")
+}
+
+func (s *ScoreboardPoller) GetSnapshot() *api.ScoreboardSnapshot {
+	s.mtx.RLock()
+	defer s.mtx.RUnlock()
+	return s.snapshot
 }

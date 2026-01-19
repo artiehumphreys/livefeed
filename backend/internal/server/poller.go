@@ -29,6 +29,7 @@ func (p *Poller) Start(interval time.Duration) {
 
 	// run a new goroutine to fetch information every `interval` seconds
 	go func() {
+		p.PollOnce()
 		for range ticker.C {
 			p.PollOnce()
 		}

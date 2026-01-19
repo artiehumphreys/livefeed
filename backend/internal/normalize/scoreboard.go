@@ -16,7 +16,7 @@ func ParseScoreboard(data []byte) (*types.RawScoreboardResponse, error) {
 	return &res, nil
 }
 
-func NormalizeScoreboard(raw []types.RawScoreboardGames) []types.GameSummary {
+func NormalizeScoreboard(raw []types.RawScoreboardGames) ([]types.GameSummary, error) {
 	res := make([]types.GameSummary, 0, len(raw))
 
 	for _, g := range raw {
@@ -42,5 +42,5 @@ func NormalizeScoreboard(raw []types.RawScoreboardGames) []types.GameSummary {
 		})
 	}
 
-	return res
+	return res, nil
 }

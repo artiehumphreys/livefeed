@@ -50,3 +50,25 @@ func (c *Client) GetPlayByPlay(gameID uint32) (*types.PlayByPlaySummary, error) 
 
 	return pbp, nil
 }
+
+func (c *Client) GetScoreboard() ([]types.GameSummary, error) {
+	data, err := c.FetchScoreboard()
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+
+	raw, err := normalize.ParseScoreboard(data)
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+
+	sb, err := normalize.NormalizeScoreboard(raw.Games)
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+
+	return sb, nil
+}

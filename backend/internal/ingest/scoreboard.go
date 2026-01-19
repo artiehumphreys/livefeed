@@ -7,7 +7,7 @@ import (
 )
 
 func (c *Client) FetchScoreboard() ([]byte, error) {
-	url := fmt.Sprintf("%s/scoreboard/basketball/d1", c.BaseURL)
+	url := fmt.Sprintf("%s/scoreboard/basketball-men/d1", c.BaseURL)
 
 	resp, err := http.Get(url)
 	if err != nil {
