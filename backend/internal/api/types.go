@@ -19,3 +19,8 @@ type TeamSnapshot struct {
 	Name    string
 	Metrics analysis.TeamMetrics
 }
+
+type ScoreboardSnapshot struct {
+	Games       []types.GameSummary
+	LastUpdated int64
+}

@@ -1,10 +1,20 @@
 package normalize
 
 import (
+	"encoding/json"
 	"strings"
 
 	"github.com/artiehumphreys/livefeed/internal/types"
 )
+
+func ParseScoreboard(data []byte) (*types.RawScoreboardResponse, error) {
+	var res types.RawScoreboardResponse
+	// short initialization to reduce scope of error, neat pattern
+	if err := json.Unmarshal(data, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
 
 func NormalizeScoreboard(raw []types.RawScoreboardGames) []types.GameSummary {
 	res := make([]types.GameSummary, 0, len(raw))
