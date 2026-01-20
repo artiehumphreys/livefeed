@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { GameSummary, ScoreboardResponse } from "@/types/scoreboard";
+import { GameSummary, ScoreboardResponse } from "@/types";
 
 export function useScoreboard(interval: number) {
   const [games, setGames] = useState<GameSummary[]>([]);
