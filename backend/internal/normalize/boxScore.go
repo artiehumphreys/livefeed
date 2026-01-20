@@ -29,6 +29,17 @@ func findTeamBox(
 	return types.RawTeamBox{}, false
 }
 
+func getStatus(s string) types.GameStatus {
+	switch s {
+	case "F":
+		return types.StatusFinal
+	case "I":
+		return types.StatusLive
+	}
+
+	return types.StatusBefore
+}
+
 func NormalizeBoxScore(raw *types.RawBoxScore) (*types.BoxScore, error) {
 	clock := parseClockFromBoxScore(raw)
 
@@ -45,7 +56,7 @@ func NormalizeBoxScore(raw *types.RawBoxScore) (*types.BoxScore, error) {
 
 	return &types.BoxScore{
 		ContestID: raw.ContestID,
-		Status:    strings.TrimSpace(raw.Status),
+		Status:    getStatus(raw.Status),
 		Period:    strings.TrimSpace(raw.Period),
 		Clock:     clock,
 		TeamBoxes: teams,

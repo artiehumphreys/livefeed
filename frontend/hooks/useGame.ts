@@ -5,9 +5,9 @@ export function useGame(gameId: string) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(
-        `http://localhost:8080/snapshot?gameId=${gameId}`,
-      );
+      await fetch(`http://localhost:8080/set-game?gameId=${gameId}`);
+
+      const res = await fetch(`http://localhost:8080/snapshot`);
       if (!res.ok) return;
       setSnapshot(await res.json());
     };
