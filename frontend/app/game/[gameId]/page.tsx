@@ -1,10 +1,9 @@
-import { redirect } from "next/navigation";
+"use client";
 
-export default async function GamePage({
-  params,
-}: {
-  params: { gameId: string };
-}) {
-  const p = await params;
+import { redirect } from "next/navigation";
+import { useParams } from "next/navigation";
+
+export default function GamePage() {
+  const p = useParams();
   redirect(`/game/${p.gameId}/boxscore`);
 }

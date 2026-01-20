@@ -1,21 +1,46 @@
+"use client";
+
 import { useEffect, useState } from "react";
 
-export function useGame(gameId: string) {
+export function useGame(gameId: string | undefined) {
   const [snapshot, setSnapshot] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    if (!gameId) return;
+
+    let intervalId: NodeJS.Timeout;
+
+    const start = async () => {
+      const validate = await fetch(
+        `http://localhost:8080/validate-game?gameId=${gameId}`,
+      );
+
+      if (!validate.ok) {
+        setError(`Invalid game ID ${gameId}`);
+        return;
+      }
+
       await fetch(`http://localhost:8080/set-game?gameId=${gameId}`);
 
-      const res = await fetch(`http://localhost:8080/snapshot`);
-      if (!res.ok) return;
-      setSnapshot(await res.json());
+      const fetchSnapshot = async () => {
+        const res = await fetch(`http://localhost:8080/snapshot`);
+        if (res.ok) {
+          setSnapshot(await res.json());
+        }
+      };
+
+      await fetchSnapshot();
+
+      intervalId = setInterval(fetchSnapshot, 5000);
     };
 
-    fetchData();
-    const id = setInterval(fetchData, 5000);
-    return () => clearInterval(id);
+    start();
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
   }, [gameId]);
 
-  return snapshot;
+  return { snapshot, error };
 }

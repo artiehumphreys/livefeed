@@ -15,6 +15,42 @@ type Poller struct {
 	client   *ingest.Client
 	mtx      sync.RWMutex
 	snapshot *api.GameSnapshot
+
+	ticker *time.Ticker
+	stop   chan struct{}
+}
+
+func (p *Poller) Start(interval time.Duration) {
+	if p.stop != nil {
+		return
+	}
+	p.stop = make(chan struct{})
+	p.ticker = time.NewTicker(interval)
+
+	// run a new goroutine to fetch information every `interval` seconds
+	go func() {
+		p.PollOnce()
+		for {
+			select {
+			case <-p.ticker.C:
+				p.PollOnce()
+			case <-p.stop:
+				return
+			}
+		}
+	}()
+}
+
+func (p *Poller) Stop() {
+	if p.stop == nil {
+		return
+	}
+	close(p.stop)
+	p.stop = nil
+	if p.ticker != nil {
+		p.ticker.Stop()
+		p.ticker = nil
+	}
 }
 
 func NewPoller(gameID uint32) *Poller {
@@ -22,18 +58,6 @@ func NewPoller(gameID uint32) *Poller {
 		gameID: gameID,
 		client: ingest.NewClient(),
 	}
-}
-
-func (p *Poller) Start(interval time.Duration) {
-	ticker := time.NewTicker(interval)
-
-	// run a new goroutine to fetch information every `interval` seconds
-	go func() {
-		p.PollOnce()
-		for range ticker.C {
-			p.PollOnce()
-		}
-	}()
 }
 
 func (p *Poller) GetSnapshot() *api.GameSnapshot {

@@ -40,8 +40,19 @@ func (s *Server) SetGameHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	gameID := uint32(gameID64)
+
 	s.mtx.Lock()
 	defer s.mtx.Unlock()
+
+	if s.gamePoller != nil {
+		if s.gamePoller.gameID == gameID {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+		s.gamePoller.Stop()
+		s.gamePoller = nil
+	}
 
 	// replace active gamePoller
 	p := NewPoller(uint32(gameID64))
