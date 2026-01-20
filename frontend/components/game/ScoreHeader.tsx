@@ -1,6 +1,8 @@
 export function ScoreHeader({ snapshot: raw }: { snapshot: any }) {
   const snapshot = raw?.snapshot ?? raw; // unwrap if needed
 
+  console.log(snapshot);
+
   if (!snapshot?.Teams || snapshot.Teams.length !== 2) {
     return (
       <div className="flex justify-center">

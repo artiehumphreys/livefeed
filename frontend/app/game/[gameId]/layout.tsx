@@ -1,22 +1,26 @@
 "use client";
 
-import { useGame } from "@/hooks/useGame";
-import { ScoreHeader } from "@/components/game/ScoreHeader";
 import { useParams } from "next/navigation";
+import { useGame } from "@/hooks/useGame";
+import { GameProvider } from "@/components/game/GameContext";
+import { ScoreHeader } from "@/components/game/ScoreHeader";
+import { GameTabs } from "@/components/game/GameTabs";
 
 export default function GameLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const p = useParams();
-  const snapshot = useGame(p.gameId);
-  if (!snapshot) return <p>Loading...</p>;
+  const params = useParams<{ gameId: string }>();
+  const { snapshot, error } = useGame(params?.gameId);
 
   return (
-    <div className="max-w-5xl mx-auto p-4">
-      <ScoreHeader snapshot={snapshot} />
-      {children}
-    </div>
+    <GameProvider value={{ snapshot, error }}>
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        <ScoreHeader snapshot={snapshot} />
+        <GameTabs gameId={params.gameId} />
+        <div className="pt-4">{children}</div>
+      </div>
+    </GameProvider>
   );
 }
