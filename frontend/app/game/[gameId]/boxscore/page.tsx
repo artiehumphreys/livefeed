@@ -1,7 +1,4 @@
-export default function BoxscorePage() {
-  return (
-    <div className="p-6">
-      <main></main>
-    </div>
-  );
+import { BoxScoreTab } from "@/components/game/BoxScoreTab";
+export default function Page() {
+  return <BoxScoreTab />;
 }

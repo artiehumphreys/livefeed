@@ -1,6 +1,8 @@
 *.next
 *.swp
 
+backend/server
+
 # dependencies
 */node_modules/*
 /.pnp
